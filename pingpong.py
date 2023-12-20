@@ -20,8 +20,8 @@ class Player(GameSprite):
         if keys[K_DOWN] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
 
-win_width = 700
-win_height = 500
+win_width = 1050
+win_height = 1000
 
 window = display.set_mode((win_width, win_height))
 display.set_caption('Ping-Pong')
