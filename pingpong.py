@@ -1,9 +1,11 @@
 from pygame import *
+import random
 
 class GameSprite(sprite.Sprite):
+    size = (26,140)
     def __init__(self,player_img,player_x,player_y,player_speed):
         super().__init__()
-        self.image = transform.scale(image.load(player_img),(26,140))
+        self.image = transform.scale(image.load(player_img),self.size)
         self.speed = player_speed
         self.rect = self.image.get_rect()
         self.rect.x = player_x
@@ -25,6 +27,17 @@ class Player2(Player):
     Key_up = K_UP
     Key_down = K_DOWN
 
+class Enemy(GameSprite):
+    size = (28,28)
+    def __init__(self,player_speed, player_img = 'bal.png'):
+        super().__init__(player_img,random.randint(0,win_width - 65),0,player_speed)
+    def update(self):
+        self.rect.y += self.speed
+        if self.rect.y >= 470:
+            self.rect.y = 0
+            self.rect.x = random.randint(0, win_width-65)
+            self.speed = random.randint(2,2)
+
 win_width = 700
 win_height = 500
 
@@ -41,6 +54,7 @@ game = True
 finish = False
 pl1 = Player('racket.png',20,150,5)
 pl2 = Player2('racket.png',650,150,5)
+ball = Enemy(10)
 
 while game:
     for e in event.get():
@@ -52,6 +66,8 @@ while game:
         pl1.drop()
         pl2.update()
         pl2.drop()
+        ball.update()
+        ball.drop()
         display.update()
     else:
         finish = False
