@@ -29,14 +29,23 @@ class Player2(Player):
 
 class Enemy(GameSprite):
     size = (28,28)
-    def __init__(self,player_speed, player_img = 'bal.png'):
-        super().__init__(player_img,random.randint(0,win_width - 65),0,player_speed)
+    speed_x = 1
+    speed_y = 1
     def update(self):
-        self.rect.y += self.speed
-        if self.rect.y >= 470:
-            self.rect.y = 0
-            self.rect.x = random.randint(0, win_width-65)
-            self.speed = random.randint(2,2)
+        self.rect.y = self.rect.y + self.speed_y * self.speed
+        self.rect.x = self.rect.x + self.speed_x * self.speed
+
+        if self.rect.x >= win_width-28:
+            self.speed_x = -1
+
+        if self.rect.y >= win_height-28:
+            self.speed_y *= -1
+
+        if self.rect.y <= 0:
+            self.speed_y = 1
+
+        if self.rect.x <= 0:
+            self.speed_x = 1
 
 win_width = 700
 win_height = 500
@@ -54,12 +63,18 @@ game = True
 finish = False
 pl1 = Player('racket.png',20,150,5)
 pl2 = Player2('racket.png',650,150,5)
-ball = Enemy(10)
+ball = Enemy('bal.png',350,10,3)
 
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+
+    if sprite.collide_rect(ball,pl2):
+        ball.speed_x *= -1
+    if sprite.collide_rect(ball,pl1):
+        ball.speed_x *= -1
+
     if finish != True:
         window.blit(background, (0,0))
         pl1.update()
